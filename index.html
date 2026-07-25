@@ -153,6 +153,25 @@
     .btn-view     { background: #0f3460; color: white; }
     .btn-download { background: #f0f4ff; color: #0f3460; }
 
+    /* ── DOWNLOAD QR BUTTON ── */
+    .btn-qr {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.35rem;
+      width: 100%;
+      padding: 0.45rem;
+      border-radius: 8px;
+      border: 1.5px dashed #0f3460;
+      background: transparent;
+      color: #0f3460;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.15s, opacity 0.15s;
+    }
+    .btn-qr:hover { background: #f0f4ff; }
+
     /* ── EMPTY STATE ── */
     .empty {
       grid-column: 1/-1;
@@ -271,10 +290,13 @@ function renderCards() {
       </div>
       <div class="card-body">
         <div class="qr-wrapper" id="qr-${i}"></div>
+        <button class="btn-qr" onclick="downloadQR(${i}, '${file.filename}', '${file.name}')">
+          ⬇️ Unduh QR Code
+        </button>
         <div class="card-url">${url}</div>
         <div class="card-actions">
           <a href="${url}" target="_blank" class="btn-view">🔍 Buka</a>
-          <a href="${url}" download class="btn-download">⬇️ Unduh</a>
+          <a href="${url}" download class="btn-download">⬇️ Unduh File</a>
         </div>
       </div>`;
 
@@ -313,6 +335,57 @@ function generateQRCodes() {
       correctLevel:  QRCode.CorrectLevel.M
     });
   });
+}
+
+/* ── Download QR sebagai PNG dengan bingkai putih ── */
+function downloadQR(index, filename, docName) {
+  const wrapper  = document.getElementById(`qr-${index}`);
+  const original = wrapper.querySelector('canvas');
+
+  if (!original) {
+    alert('QR belum selesai di-generate, tunggu sebentar lalu coba lagi.');
+    return;
+  }
+
+  const PADDING = 28;          // lebar bingkai putih (px)
+  const LABEL_H = 36;          // tinggi area teks nama dokumen di bawah QR
+  const qrSize  = original.width;
+  const totalW  = qrSize + PADDING * 2;
+  const totalH  = qrSize + PADDING * 2 + LABEL_H;
+
+  const canvas  = document.createElement('canvas');
+  canvas.width  = totalW;
+  canvas.height = totalH;
+  const ctx     = canvas.getContext('2d');
+
+  // Latar putih penuh
+  ctx.fillStyle = '#ffffff';
+  ctx.fillRect(0, 0, totalW, totalH);
+
+  // Gambar QR di tengah
+  ctx.drawImage(original, PADDING, PADDING);
+
+  // Garis pemisah tipis
+  ctx.strokeStyle = '#e0e0e0';
+  ctx.lineWidth   = 1;
+  ctx.beginPath();
+  ctx.moveTo(PADDING, qrSize + PADDING + 6);
+  ctx.lineTo(totalW - PADDING, qrSize + PADDING + 6);
+  ctx.stroke();
+
+  // Nama dokumen di bawah QR
+  const label = docName.replace(/^ATD-SOP-\d+\s*[—-]\s*/i, ''); // hilangkan prefix nomor
+  ctx.fillStyle   = '#1a1a2e';
+  ctx.font        = 'bold 11px sans-serif';
+  ctx.textAlign   = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText(label, totalW / 2, qrSize + PADDING + 6 + LABEL_H / 2, totalW - PADDING * 2);
+
+  // Trigger download
+  const link     = document.createElement('a');
+  link.download  = `QR-${filename.replace(/\.[^.]+$/, '')}.png`;
+  link.href      = canvas.toDataURL('image/png');
+  link.click();
 }
 
 /* ── Init ── */
