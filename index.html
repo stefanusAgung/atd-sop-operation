@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SOP Operasional - Adika Tirta Daya</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: #f5f6fa;
+      color: #1a1a2e;
+      min-height: 100vh;
+    }
+
+    /* ── HEADER ── */
+    header {
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 60%, #0f3460 100%);
+      color: white;
+      padding: 2.5rem 2rem;
+      text-align: center;
+    }
+    header h1 {
+      font-size: 1.75rem;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+    }
+    header p {
+      margin-top: 0.5rem;
+      opacity: 0.7;
+      font-size: 0.9rem;
+    }
+
+    /* ── TOOLBAR ── */
+    .toolbar {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      padding: 1.25rem 2rem;
+      gap: 0.75rem;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.5rem 1.1rem;
+      border-radius: 8px;
+      border: none;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity 0.15s, transform 0.1s;
+    }
+    .btn:hover { opacity: 0.85; transform: translateY(-1px); }
+    .btn-primary { background: #0f3460; color: white; }
+    .btn-outline { background: white; color: #0f3460; border: 1.5px solid #0f3460; }
+
+    /* ── GRID ── */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 1.5rem;
+      padding: 0 2rem 3rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    /* ── CARD ── */
+    .card {
+      background: white;
+      border-radius: 14px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: box-shadow 0.2s, transform 0.2s;
+    }
+    .card:hover {
+      box-shadow: 0 6px 24px rgba(15,52,96,0.13);
+      transform: translateY(-3px);
+    }
+
+    .card-header {
+      background: linear-gradient(135deg, #0f3460, #16213e);
+      padding: 1.25rem 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .card-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.25rem;
+      flex-shrink: 0;
+    }
+    .icon-pdf  { background: rgba(255,80,80,0.2); }
+    .icon-img  { background: rgba(80,200,120,0.2); }
+    .icon-doc  { background: rgba(80,140,255,0.2); }
+    .icon-file { background: rgba(200,200,200,0.2); }
+
+    .card-title { color: white; font-size: 0.95rem; font-weight: 600; line-height: 1.3; }
+    .card-desc  { color: rgba(255,255,255,0.6); font-size: 0.78rem; margin-top: 0.2rem; }
+
+    .card-body {
+      padding: 1.25rem 1.5rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+      flex: 1;
+    }
+
+    .qr-wrapper {
+      background: #fafafa;
+      border: 1px solid #eee;
+      border-radius: 10px;
+      padding: 0.75rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .qr-wrapper canvas, .qr-wrapper img { display: block; }
+
+    .card-url {
+      font-size: 0.72rem;
+      color: #888;
+      word-break: break-all;
+      text-align: center;
+      line-height: 1.4;
+    }
+
+    .card-actions {
+      display: flex;
+      gap: 0.6rem;
+      width: 100%;
+    }
+    .card-actions a {
+      flex: 1;
+      text-align: center;
+      padding: 0.55rem;
+      border-radius: 8px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: opacity 0.15s;
+    }
+    .card-actions a:hover { opacity: 0.8; }
+    .btn-view     { background: #0f3460; color: white; }
+    .btn-download { background: #f0f4ff; color: #0f3460; }
+
+    /* ── EMPTY STATE ── */
+    .empty {
+      grid-column: 1/-1;
+      text-align: center;
+      padding: 4rem 2rem;
+      color: #aaa;
+    }
+    .empty svg { opacity: 0.3; margin-bottom: 1rem; }
+
+    /* ── PRINT ── */
+    @media print {
+      body { background: white; }
+      header, .toolbar { display: none; }
+      .grid { grid-template-columns: repeat(2, 1fr); padding: 0; gap: 1rem; }
+      .card { box-shadow: none; border: 1px solid #ddd; break-inside: avoid; }
+      .card-actions, .card-url { display: none; }
+    }
+
+    @media (max-width: 600px) {
+      header h1 { font-size: 1.3rem; }
+      .grid { grid-template-columns: 1fr; padding: 0 1rem 2rem; }
+      .toolbar { padding: 1rem; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>📄 Dokumen SOP Operasional</h1>
+  <p>PT Adika Tirta Daya &mdash; Scan QR Code untuk membuka dokumen</p>
+</header>
+
+<div class="toolbar">
+  <button class="btn btn-outline" onclick="window.print()">🖨️ Print Semua QR</button>
+</div>
+
+<div class="grid" id="grid">
+  <!-- Cards di-generate oleh JavaScript di bawah -->
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     KONFIGURASI FILE
+     Tambah / edit / hapus objek dalam array FILES untuk
+     mengelola daftar dokumen yang tampil.
+
+     Field:
+       name     : judul yang tampil di kartu
+       filename : nama file di folder /files/
+       desc     : deskripsi singkat (opsional)
+
+     Tipe file yang didukung: pdf, jpg, jpeg, png, gif,
+                               webp, doc, docx, xls, xlsx
+═══════════════════════════════════════════════════ -->
+<script>
+const BASE_URL = "https://sop-operation.adikatirtadaya.co.id";
+
+const FILES = [
+  {
+    name: "SOP Dokumen 1",
+    filename: "dokumen1.pdf",
+    desc: "Prosedur operasional standar bagian 1"
+  },
+  {
+    name: "SOP Dokumen 2",
+    filename: "dokumen2.pdf",
+    desc: "Prosedur operasional standar bagian 2"
+  },
+  {
+    name: "SOP Dokumen 3",
+    filename: "dokumen3.pdf",
+    desc: "Prosedur operasional standar bagian 3"
+  },
+  // Tambahkan dokumen baru di sini, contoh:
+  // { name: "SOP Dokumen 4", filename: "dokumen4.pdf", desc: "..." },
+];
+
+/* ── Deteksi ikon berdasarkan ekstensi ── */
+function getIcon(filename) {
+  const ext = filename.split('.').pop().toLowerCase();
+  if (['pdf'].includes(ext))                return { emoji: '📕', cls: 'icon-pdf'  };
+  if (['jpg','jpeg','png','gif','webp'].includes(ext)) return { emoji: '🖼️', cls: 'icon-img'  };
+  if (['doc','docx'].includes(ext))         return { emoji: '📝', cls: 'icon-doc'  };
+  if (['xls','xlsx'].includes(ext))         return { emoji: '📊', cls: 'icon-doc'  };
+  return { emoji: '📄', cls: 'icon-file' };
+}
+
+/* ── Render kartu ── */
+function renderCards() {
+  const grid = document.getElementById('grid');
+
+  if (!FILES.length) {
+    grid.innerHTML = `
+      <div class="empty">
+        <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+          <polyline points="14 2 14 8 20 8"/>
+        </svg>
+        <p>Belum ada dokumen. Tambahkan file ke array FILES di index.html.</p>
+      </div>`;
+    return;
+  }
+
+  FILES.forEach((file, i) => {
+    const url   = `${BASE_URL}/files/${file.filename}`;
+    const icon  = getIcon(file.filename);
+
+    const card  = document.createElement('div');
+    card.className = 'card';
+    card.innerHTML = `
+      <div class="card-header">
+        <div class="card-icon ${icon.cls}">${icon.emoji}</div>
+        <div>
+          <div class="card-title">${file.name}</div>
+          ${file.desc ? `<div class="card-desc">${file.desc}</div>` : ''}
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="qr-wrapper" id="qr-${i}"></div>
+        <div class="card-url">${url}</div>
+        <div class="card-actions">
+          <a href="${url}" target="_blank" class="btn-view">🔍 Buka</a>
+          <a href="${url}" download class="btn-download">⬇️ Unduh</a>
+        </div>
+      </div>`;
+
+    grid.appendChild(card);
+  });
+}
+
+/* ── Load QRCode.js lalu generate semua QR ── */
+function loadQRLib(callback) {
+  const s = document.createElement('script');
+  s.src = 'https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js';
+  s.onload  = callback;
+  s.onerror = () => {
+    // fallback: Google Charts API
+    FILES.forEach((file, i) => {
+      const url = `${BASE_URL}/files/${file.filename}`;
+      const img = document.createElement('img');
+      img.src   = `https://chart.googleapis.com/chart?cht=qr&chs=180x180&chl=${encodeURIComponent(url)}`;
+      img.alt   = `QR ${file.name}`;
+      img.width = 180;
+      document.getElementById(`qr-${i}`).appendChild(img);
+    });
+  };
+  document.head.appendChild(s);
+}
+
+function generateQRCodes() {
+  FILES.forEach((file, i) => {
+    const url = `${BASE_URL}/files/${file.filename}`;
+    new QRCode(document.getElementById(`qr-${i}`), {
+      text:          url,
+      width:         180,
+      height:        180,
+      colorDark:     "#1a1a2e",
+      colorLight:    "#ffffff",
+      correctLevel:  QRCode.CorrectLevel.M
+    });
+  });
+}
+
+/* ── Init ── */
+renderCards();
+loadQRLib(generateQRCodes);
+</script>
+
+</body>
+</html>
